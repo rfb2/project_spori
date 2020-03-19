@@ -1,6 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:barcode_scan/barcode_scan.dart';
 
 void main() => runApp(MyApp());
 
@@ -33,7 +34,7 @@ class MyHomePage extends StatefulWidget {
   const MyHomePage({
     Key key,
     @required this.camera,
-}) : super(key: key);
+  }) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -68,7 +69,6 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -78,18 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: FutureBuilder<void>(
-          future: _initializeControllerFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              // If the Future is complete, display the preview.
-              return CameraPreview(_controller);
-            } else {
-              // Otherwise, display a loading indicator.
-              return Center(child: CircularProgressIndicator());
-            }
-          },
-        ),
+        child: OutlineButton(child: Text("Taka mynd"),),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
