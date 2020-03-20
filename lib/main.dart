@@ -42,7 +42,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   CameraController _controller;
-  Future<void> _initializeControllerFuture;
+  String _barcode = 'No data';
 
   @override
   void initState() {
@@ -51,8 +51,6 @@ class _MyHomePageState extends State<MyHomePage> {
       widget.camera,
       ResolutionPreset.medium,
     );
-
-    _initializeControllerFuture = _controller.initialize();
   }
 
   @override
@@ -76,10 +74,29 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text("Sælir"),
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: OutlineButton(child: Text("Taka mynd"),),
+        child: Column(
+          children: <Widget>[
+            Center(
+              // Center is a layout widget. It takes a single child and positions it
+              // in the middle of the parent.
+              child: OutlineButton(
+                child: Text("Skanna vöru"),
+                onPressed: getBarcode,
+              ),
+            ),
+            Center(
+              child: Text('$_barcode'),
+            ),
+          ],
+        ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  Future<void> getBarcode() async {
+    String barcode = await BarcodeScanner.scan();
+    setState(() {
+      _barcode = barcode;
+    });
   }
 }
