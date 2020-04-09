@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'fetchData.dart';
 import 'dataClasses.dart';
+import 'searchPage.dart';
 
 void main() => runApp(MyApp());
 
@@ -70,6 +71,10 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text("Spori"),
         actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: _pushSearch,
+          ),
           IconButton(
             icon: Icon(Icons.history),
             onPressed: _pushHistory,
@@ -139,6 +144,14 @@ class _MyHomePageState extends State<MyHomePage> {
           );
         },
       ),
+    );
+  }
+
+  void _pushSearch() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => SearchPage()
+      )
     );
   }
 
