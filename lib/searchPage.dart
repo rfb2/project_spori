@@ -10,11 +10,10 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  Set<Product> _results = Set<Product>();
+  Future<Set<Product>> _results;
 
-  @override
-  Widget build(BuildContext context) {
-    final Iterable<ListTile> tiles = _results.map((Product prod) {
+  Widget _buildForm(AsyncSnapshot<Set<Product>> snapshot) {
+    final Iterable<ListTile> tiles = snapshot.data.map((Product prod) {
       return ListTile(
         title: Text(
           prod.name,
@@ -25,6 +24,11 @@ class _SearchPageState extends State<SearchPage> {
       context: context,
       tiles: tiles,
     ).toList();
+    return ListView(children: divided, shrinkWrap: true);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Search'),
@@ -34,16 +38,68 @@ class _SearchPageState extends State<SearchPage> {
           TextField(
             onChanged: (String value) => searchProducts(value),
           ),
-          ListView(children: divided, shrinkWrap: true),
+          FutureBuilder<Set<Product>>(
+            future: _results,
+            builder:
+                (BuildContext context, AsyncSnapshot<Set<Product>> snapshot) {
+              List<Widget> children;
+
+              if (snapshot.hasData) {
+                children = <Widget>[_buildForm(snapshot)];
+              } else if (snapshot.hasError) {
+                children = <Widget>[
+                  Icon(
+                    Icons.error_outline,
+                    color: Colors.red,
+                    size: 60,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: Text('Engar vörur fundust'),
+                  )
+                ];
+              } else if (snapshot.connectionState == ConnectionState.none) {
+                children = <Widget>[
+                  Icon(
+                    Icons.info_outline,
+                    color: Colors.green,
+                    size: 60,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: Text('Vinsamlegast sláðu inn vöruheiti.'),
+                  )
+                ];
+              } else {
+                children = <Widget>[
+                  SizedBox(
+                    child: CircularProgressIndicator(),
+                    width: 60,
+                    height: 60,
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 16),
+                    child: Text('Bíðið andartak...'),
+                  )
+                ];
+              }
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: children,
+                ),
+              );
+            },
+          ),
         ],
       ),
     );
   }
 
-  Future<void> searchProducts(String name) async {
-    Set<Product> results = await fetchProductsFromName(name);
+  void searchProducts(String name) async {
     setState(() {
-      _results = results;
+      _results = fetchProductsFromName(name);
     });
   }
 }

@@ -38,8 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
   CameraController _controller;
   final Set<Product> _history = Set<Product>();
   String _barcode = '';
-  String _name = '';
-  num _score = -1;
+  Future<Product> _product;
   Image _image;
 
   @override
@@ -55,6 +54,26 @@ class _MyHomePageState extends State<MyHomePage> {
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  Widget _buildForm(AsyncSnapshot<Product> snapshot) {
+    return Card(
+      child: Column(
+        children: <Widget>[
+          Center(
+            child: Text(
+              '${snapshot.data.name}',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+            ),
+          ),
+          Center(
+              child: Text(
+            '${snapshot.data.score}',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+          )),
+        ],
+      ),
+    );
   }
 
   @override
@@ -92,29 +111,60 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: getProduct,
               ),
             ),
-            if (_name.length != 0)
-              Card(
-                child: Column(
-                  children: <Widget>[
-                    if (_barcode.length != 0) Center(child: Text('$_barcode')),
-                    if (_name.length != 0)
-                      Center(
-                        child: Text(
-                          '$_name',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 24),
-                        ),
-                      ),
-                    if (_score != -1)
-                      Center(
-                          child: Text(
-                        '$_score',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 24),
-                      )),
-                  ],
-                ),
-              ),
+            if (_barcode.length != 0) Center(child: Text('$_barcode')),
+            FutureBuilder<Product>(
+              future: _product,
+              builder: (BuildContext context, AsyncSnapshot<Product> snapshot) {
+                List<Widget> children;
+
+                if (snapshot.hasData) {
+                  children = <Widget>[_buildForm(snapshot)];
+                } else if (snapshot.hasError) {
+                  children = <Widget>[
+                    Icon(
+                      Icons.error_outline,
+                      color: Colors.red,
+                      size: 60,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: Text('Vara fannst ekki'),
+                    )
+                  ];
+                } else if (snapshot.connectionState == ConnectionState.none) {
+                  children = <Widget>[
+                    Icon(
+                      Icons.info_outline,
+                      color: Colors.green,
+                      size: 60,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: Text('Vinsamlegast skannaðu vöru.'),
+                    )
+                  ];
+                } else {
+                  children = <Widget>[
+                    SizedBox(
+                      child: CircularProgressIndicator(),
+                      width: 60,
+                      height: 60,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 16),
+                      child: Text('Bíðið andartak...'),
+                    )
+                  ];
+                }
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: children,
+                  ),
+                );
+              },
+            ),
           ],
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
@@ -148,23 +198,19 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _pushSearch() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => SearchPage()
-      )
-    );
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => SearchPage()));
   }
 
   Future<void> getProduct() async {
     String barcode = await BarcodeScanner.scan();
-    Product prod = await fetchProduct(barcode);
+    Future<Product> prod = fetchProduct(barcode);
     // Image img = Image.network('https://cdn.aha.is/media/catalog/product/cache/1/image/752x501/4137793dd7223b9146d9dcb53ced065c/i/m/image_6084_1_11_1_181_1_128_1_51_1_2_1_8_1_25_1_10_1_6_2_7_1_8_1_1_1_22_1_7_1_1_2_5_1_14_1_8_1_16_1_16_1_6_1_4_2_2_1_8_1_17_1_4_1_4_1_8_1_5_1_11_1_3_1_6_1_2_1_3_1_4_1_1_2_3_1_1_1_16_2_6_1_3_1_21_1_5_1_8_1_4_1_3_1_2_1_8_3_4_1_921_2_2140_1_831.jpg');
 
     setState(() {
-      _history.add(prod);
       _barcode = barcode;
-      _name = prod.name;
-      _score = prod.score;
+      _product = prod;
+      //_history.add(prod);
     });
   }
 }
