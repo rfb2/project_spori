@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:projectspori/detailPage.dart';
 
 import 'fetchData.dart';
 import 'dataClasses.dart';
@@ -18,6 +19,7 @@ class _SearchPageState extends State<SearchPage> {
         title: Text(
           prod.name,
         ),
+        onTap: () => pushDetail(prod),
       );
     });
     final List<Widget> divided = ListTile.divideTiles(
@@ -101,5 +103,10 @@ class _SearchPageState extends State<SearchPage> {
     setState(() {
       _results = fetchProductsFromName(name);
     });
+  }
+
+  void pushDetail(Product prod) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => DetailPage(product: prod)));
   }
 }
