@@ -68,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           Center(
               child: Text(
-            '${snapshot.data.score}',
+            '${snapshot.data.grade.toStringAsPrecision(2)}',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
           )),
         ],
