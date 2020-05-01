@@ -2,7 +2,7 @@ class Product {
   final String name;
   final String code;
   final String origin;
-  final num originFootprint;
+  final num originDistance;
   final num score;
   final String packaging;
   final num packagingFootprint;
@@ -14,7 +14,7 @@ class Product {
     this.name,
     this.code,
     this.origin,
-    this.originFootprint,
+    this.originDistance,
     this.score,
     this.packaging,
     this.packagingFootprint,
@@ -28,7 +28,7 @@ class Product {
       name: json['name'],
       code: json['code'],
       origin: json['origin'],
-      originFootprint: json['origin_footprint'],
+      originDistance: json['origin_distance'],
       score: json['score'],
       packaging: json['packaging'],
       packagingFootprint: json['packaging_footprint'],

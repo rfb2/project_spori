@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:barcode_scan/barcode_scan.dart';
+import 'detailPage.dart';
 import 'fetchData.dart';
 import 'dataClasses.dart';
 import 'searchPage.dart';
@@ -57,6 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _buildForm(AsyncSnapshot<Product> snapshot) {
+    _history.add(snapshot.data);
     return Card(
       child: Column(
         children: <Widget>[
@@ -71,6 +73,12 @@ class _MyHomePageState extends State<MyHomePage> {
             '${snapshot.data.grade.toStringAsPrecision(2)}',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
           )),
+          Center(
+            child: OutlineButton(
+              child: Text('More Details'),
+              onPressed: () => _pushDetail(snapshot.data),
+            ),
+          ),
         ],
       ),
     );
@@ -100,73 +108,75 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            Center(
-              // Center is a layout widget. It takes a single child and positions it
-              // in the middle of the parent.
-              child: OutlineButton(
-                child: Text("Skanna vöru"),
-                onPressed: getProduct,
-              ),
+      body: Column(
+        children: <Widget>[
+          Center(
+            child: OutlineButton(
+              child: Text("Skanna vöru"),
+              onPressed: getProduct,
             ),
-            if (_barcode.length != 0) Center(child: Text('$_barcode')),
-            FutureBuilder<Product>(
-              future: _product,
-              builder: (BuildContext context, AsyncSnapshot<Product> snapshot) {
-                List<Widget> children;
+          ),
+          if (_barcode.length != 0) Center(child: Text('$_barcode')),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              FutureBuilder<Product>(
+                future: _product,
+                builder:
+                    (BuildContext context, AsyncSnapshot<Product> snapshot) {
+                  List<Widget> children;
 
-                if (snapshot.hasData) {
-                  children = <Widget>[_buildForm(snapshot)];
-                } else if (snapshot.hasError) {
-                  children = <Widget>[
-                    Icon(
-                      Icons.error_outline,
-                      color: Colors.red,
-                      size: 60,
+                  if (snapshot.hasData) {
+                    children = <Widget>[_buildForm(snapshot)];
+                  } else if (snapshot.hasError) {
+                    children = <Widget>[
+                      Icon(
+                        Icons.error_outline,
+                        color: Colors.red,
+                        size: 60,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 16),
+                        child: Text('Vara fannst ekki'),
+                      ),
+                    ];
+                  } else if (snapshot.connectionState == ConnectionState.none) {
+                    children = <Widget>[
+                      Icon(
+                        Icons.info_outline,
+                        color: Colors.green,
+                        size: 60,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 16),
+                        child: Text('Vinsamlegast skannaðu vöru.'),
+                      )
+                    ];
+                  } else {
+                    children = <Widget>[
+                      SizedBox(
+                        child: CircularProgressIndicator(),
+                        width: 60,
+                        height: 60,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(top: 16),
+                        child: Text('Bíðið andartak...'),
+                      )
+                    ];
+                  }
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: children,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 16),
-                      child: Text('Vara fannst ekki'),
-                    )
-                  ];
-                } else if (snapshot.connectionState == ConnectionState.none) {
-                  children = <Widget>[
-                    Icon(
-                      Icons.info_outline,
-                      color: Colors.green,
-                      size: 60,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 16),
-                      child: Text('Vinsamlegast skannaðu vöru.'),
-                    )
-                  ];
-                } else {
-                  children = <Widget>[
-                    SizedBox(
-                      child: CircularProgressIndicator(),
-                      width: 60,
-                      height: 60,
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 16),
-                      child: Text('Bíðið andartak...'),
-                    )
-                  ];
-                }
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: children,
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ],
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
@@ -200,6 +210,11 @@ class _MyHomePageState extends State<MyHomePage> {
   void _pushSearch() {
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => SearchPage()));
+  }
+
+  void _pushDetail(Product prod) {
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => DetailPage(product: prod)));
   }
 
   Future<void> getProduct() async {

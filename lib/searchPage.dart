@@ -14,24 +14,31 @@ class _SearchPageState extends State<SearchPage> {
   Future<Set<Product>> _results;
 
   Widget _buildForm(AsyncSnapshot<Set<Product>> snapshot) {
-    final Iterable<ListTile> tiles = snapshot.data.map((Product prod) {
-      return ListTile(
-        title: Text(
-          prod.name,
+    final Iterable<Card> tiles = snapshot.data.map((Product prod) {
+      return Card(
+        child: ListTile(
+          title: Text(
+            prod.name,
+          ),
+          onTap: () => pushDetail(prod),
         ),
-        onTap: () => pushDetail(prod),
       );
     });
     final List<Widget> divided = ListTile.divideTiles(
       context: context,
       tiles: tiles,
     ).toList();
-    return ListView(children: divided, shrinkWrap: true);
+    return ListView(
+        children: divided,
+        shrinkWrap: true,
+        padding: const EdgeInsets.all(8.0));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         title: Text('Search'),
       ),
@@ -40,60 +47,62 @@ class _SearchPageState extends State<SearchPage> {
           TextField(
             onChanged: (String value) => searchProducts(value),
           ),
-          FutureBuilder<Set<Product>>(
-            future: _results,
-            builder:
-                (BuildContext context, AsyncSnapshot<Set<Product>> snapshot) {
-              List<Widget> children;
+          Padding(padding: EdgeInsets.only(top: 8)),
+          Expanded(
+            child: FutureBuilder<Set<Product>>(
+              future: _results,
+              builder:
+                  (BuildContext context, AsyncSnapshot<Set<Product>> snapshot) {
+                Widget children;
 
-              if (snapshot.hasData) {
-                children = <Widget>[_buildForm(snapshot)];
-              } else if (snapshot.hasError) {
-                children = <Widget>[
-                  Icon(
-                    Icons.error_outline,
-                    color: Colors.red,
-                    size: 60,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16),
-                    child: Text('Engar vörur fundust'),
-                  )
-                ];
-              } else if (snapshot.connectionState == ConnectionState.none) {
-                children = <Widget>[
-                  Icon(
-                    Icons.info_outline,
-                    color: Colors.green,
-                    size: 60,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16),
-                    child: Text('Vinsamlegast sláðu inn vöruheiti.'),
-                  )
-                ];
-              } else {
-                children = <Widget>[
-                  SizedBox(
-                    child: CircularProgressIndicator(),
-                    width: 60,
-                    height: 60,
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 16),
-                    child: Text('Bíðið andartak...'),
-                  )
-                ];
-              }
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: children,
-                ),
-              );
-            },
+                if (snapshot.hasData) {
+                  children = _buildForm(snapshot);
+                } else if (snapshot.hasError) {
+                  children = Column(children: <Widget>[
+                    Icon(
+                      Icons.error_outline,
+                      color: Colors.red,
+                      size: 60,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 16),
+                      child: Text('Engar vörur fundust'),
+                    )
+                  ]);
+                } else if (snapshot.connectionState == ConnectionState.none) {
+                  children = Column(children: <Widget>[
+                    Icon(
+                      Icons.info_outline,
+                      color: Colors.green,
+                      size: 60,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 16),
+                      child: Text('Vinsamlegast sláðu inn vöruheiti.'),
+                    )
+                  ]);
+                } else {
+                  children = Column(children: <Widget>[
+                    SizedBox(
+                      child: CircularProgressIndicator(),
+                      width: 60,
+                      height: 60,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 16),
+                      child: Text('Bíðið andartak...'),
+                    )
+                  ]);
+                }
+                return Center(
+                  child: children,
+                );
+              },
+            ),
           ),
+          Padding(
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom)),
         ],
       ),
     );
@@ -106,7 +115,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   void pushDetail(Product prod) {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => DetailPage(product: prod)));
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => DetailPage(product: prod)));
   }
 }
