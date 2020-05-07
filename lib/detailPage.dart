@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'constants.dart' as Constants;
 
 import 'dataClasses.dart';
 
@@ -19,11 +20,14 @@ class DetailPage extends StatelessWidget {
           Center(
             child: Text('Nafn á vöru: ${product.name}'),
           ),
-          Center(
-            child: Row(
-              children: <Widget>[
-                Text('Einkunn: '),
-                Text(
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Center(
+                child: Text('Einkunn: '),
+              ),
+              Center(
+                child: Text(
                   '${product.grade.toStringAsPrecision(3)}',
                   style: (() {
                     if (product.grade < 3.33) {
@@ -38,11 +42,20 @@ class DetailPage extends StatelessWidget {
                     }
                   }()),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
           Center(
-            child: Text('Nafn á vöru: ${product.name}'),
+            child: Text('Upprunaland: ${product.origin}'),
+          ),
+          Center(
+            child: Text('Umbúðir: ${product.packaging}'),
+          ),
+          Center(
+            child: Text('Niðurbrotstími umbúða: ${Constants.info[product.packagingBreakdownTime]}'),
+          ),
+          Center(
+            child: Text('Endurnýtanleiki umbúða: ${Constants.info[product.packagingReusability]}'),
           ),
         ],
       ),

@@ -70,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           Center(
               child: Text(
-            '${snapshot.data.grade.toStringAsPrecision(2)}',
+            '${snapshot.data.grade.toStringAsPrecision(3)}',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
           )),
           Center(
@@ -192,15 +192,23 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             );
           });
-          final List<Widget> divided = ListTile.divideTiles(
-            context: context,
-            tiles: tiles,
-          ).toList();
+
+          Widget historyChild;
+
+          if (tiles.length == 0) {
+            historyChild = Center(child: Text('Engar vörur í sögu'),);
+          } else {
+            final List<Widget> divided = ListTile.divideTiles(
+              context: context,
+              tiles: tiles,
+            ).toList();
+            historyChild = ListView(children: divided);
+          }
           return Scaffold(
             appBar: AppBar(
               title: Text('History'),
             ),
-            body: ListView(children: divided),
+            body: historyChild,
           );
         },
       ),
