@@ -4,7 +4,8 @@ import 'package:http/http.dart' as http;
 import 'dataClasses.dart';
 
 Future<Product> fetchProduct(String barcode) async {
-  final response = await http.get('https://spori-backend.herokuapp.com/products/$barcode');
+  final response =
+      await http.get('https://spori-backend.herokuapp.com/products/$barcode');
 
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
@@ -18,7 +19,8 @@ Future<Product> fetchProduct(String barcode) async {
 }
 
 Future<Set<Product>> fetchProductsFromName(String name) async {
-  final response = await http.get('https://spori-backend.herokuapp.com/products?name=$name');
+  final response =
+      await http.get('https://spori-backend.herokuapp.com/products?name=$name');
 
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,

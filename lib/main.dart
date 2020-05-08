@@ -71,7 +71,24 @@ class _MyHomePageState extends State<MyHomePage> {
           Center(
               child: Text(
             '${snapshot.data.grade.toStringAsPrecision(3)}',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+            style: (() {
+              if (snapshot.data.grade < 3.33) {
+                return TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: Colors.red);
+              } else if (snapshot.data.grade < 6.66) {
+                return TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: Colors.yellow);
+              } else {
+                return TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: Colors.green);
+              }
+            }()),
           )),
           Center(
             child: OutlineButton(
@@ -108,76 +125,120 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      body: Column(
-        children: <Widget>[
-          Center(
-            child: OutlineButton(
-              child: Text("Skanna vöru"),
-              onPressed: getProduct,
-            ),
-          ),
-          if (_barcode.length != 0) Center(child: Text('$_barcode')),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              FutureBuilder<Product>(
-                future: _product,
-                builder:
-                    (BuildContext context, AsyncSnapshot<Product> snapshot) {
-                  List<Widget> children;
-
-                  if (snapshot.hasData) {
-                    children = <Widget>[_buildForm(snapshot)];
-                  } else if (snapshot.hasError) {
-                    children = <Widget>[
-                      Icon(
-                        Icons.error_outline,
-                        color: Colors.red,
-                        size: 60,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 16),
-                        child: Text('Vara fannst ekki'),
-                      ),
-                    ];
-                  } else if (snapshot.connectionState == ConnectionState.none) {
-                    children = <Widget>[
-                      Icon(
-                        Icons.info_outline,
-                        color: Colors.green,
-                        size: 60,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 16),
-                        child: Text('Vinsamlegast skannaðu vöru.'),
-                      )
-                    ];
-                  } else {
-                    children = <Widget>[
-                      SizedBox(
-                        child: CircularProgressIndicator(),
-                        width: 60,
-                        height: 60,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 16),
-                        child: Text('Bíðið andartak...'),
-                      )
-                    ];
-                  }
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: children,
+      body: Padding(
+        padding: EdgeInsets.all(25.0),
+        child: Column(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Center(
+                  child: RaisedButton(
+                    onPressed: getProduct,
+                    textColor: Colors.white,
+                    padding: const EdgeInsets.all(0.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                      side: BorderSide(color: Colors.black45),
                     ),
-                  );
-                },
-              ),
-            ],
-          ),
-        ],
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                        gradient: LinearGradient(
+                          colors: <Color>[
+                            Color(0xFF005105),
+                            Color(0xFF009B0A),
+                          ],
+                        ),
+                      ),
+                      padding: const EdgeInsets.all(10.0),
+                      child: const Text('Skanna vöru',
+                          style: TextStyle(fontSize: 20)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                if (_barcode.length != 0) Center(child: Text('$_barcode')),
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 100.0),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    FutureBuilder<Product>(
+                      future: _product,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<Product> snapshot) {
+                        List<Widget> children;
+
+                        if (snapshot.hasData) {
+                          children = <Widget>[_buildForm(snapshot)];
+                        } else if (snapshot.hasError) {
+                          children = <Widget>[
+                            Icon(
+                              Icons.error_outline,
+                              color: Colors.red,
+                              size: 60,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 16),
+                              child: Text('Vara fannst ekki'),
+                            ),
+                          ];
+                        } else if (snapshot.connectionState ==
+                            ConnectionState.none) {
+                          children = <Widget>[
+                            Icon(
+                              Icons.info_outline,
+                              color: Colors.green,
+                              size: 60,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 16),
+                              child: Text('Vinsamlegast skannaðu vöru.'),
+                            )
+                          ];
+                        } else {
+                          children = <Widget>[
+                            SizedBox(
+                              child: CircularProgressIndicator(),
+                              width: 60,
+                              height: 60,
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 16),
+                              child: Text('Bíðið andartak...'),
+                            )
+                          ];
+                        }
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: children,
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -190,13 +251,16 @@ class _MyHomePageState extends State<MyHomePage> {
               title: Text(
                 prod.name,
               ),
+              onTap: () => _pushDetail(prod),
             );
           });
 
           Widget historyChild;
 
           if (tiles.length == 0) {
-            historyChild = Center(child: Text('Engar vörur í sögu'),);
+            historyChild = Center(
+              child: Text('Engar vörur í sögu'),
+            );
           } else {
             final List<Widget> divided = ListTile.divideTiles(
               context: context,
