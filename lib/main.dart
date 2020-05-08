@@ -2,10 +2,11 @@ import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:barcode_scan/barcode_scan.dart';
+import 'package:projectspori/historyPage.dart';
 import 'detailPage.dart';
 import 'fetchData.dart';
 import 'dataClasses.dart';
-import 'searchPage.dart';
+import 'constants.dart' as Constants;
 
 void main() => runApp(MyApp());
 
@@ -93,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
           Center(
             child: OutlineButton(
               child: Text('More Details'),
-              onPressed: () => _pushDetail(snapshot.data),
+              onPressed: () => Constants.pushDetail(context, snapshot.data),
             ),
           ),
         ],
@@ -117,11 +118,11 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search),
-            onPressed: _pushSearch,
+            onPressed: () => Constants.pushSearch(context),
           ),
           IconButton(
             icon: Icon(Icons.history),
-            onPressed: _pushHistory,
+            onPressed: () => Constants.pushHistory(context, _history),
           ),
         ],
       ),
@@ -242,53 +243,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void _pushHistory() {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (BuildContext context) {
-          final Iterable<ListTile> tiles = _history.map((Product prod) {
-            return ListTile(
-              title: Text(
-                prod.name,
-              ),
-              onTap: () => _pushDetail(prod),
-            );
-          });
-
-          Widget historyChild;
-
-          if (tiles.length == 0) {
-            historyChild = Center(
-              child: Text('Engar vörur í sögu'),
-            );
-          } else {
-            final List<Widget> divided = ListTile.divideTiles(
-              context: context,
-              tiles: tiles,
-            ).toList();
-            historyChild = ListView(children: divided);
-          }
-          return Scaffold(
-            appBar: AppBar(
-              title: Text('History'),
-            ),
-            body: historyChild,
-          );
-        },
-      ),
-    );
-  }
-
-  void _pushSearch() {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => SearchPage()));
-  }
-
-  void _pushDetail(Product prod) {
-    Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => DetailPage(product: prod)));
-  }
-
   Future<void> getProduct() async {
     String barcode = await BarcodeScanner.scan();
     Future<Product> prod = fetchProduct(barcode);
@@ -297,7 +251,6 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _barcode = barcode;
       _product = prod;
-      //_history.add(prod);
     });
   }
 }
