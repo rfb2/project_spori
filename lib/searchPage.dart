@@ -13,6 +13,12 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   Future<Set<Product>> _results;
 
+  @override
+  void initState() {
+    super.initState();
+    searchProducts("");
+  }
+
   Widget _buildForm(AsyncSnapshot<Set<Product>> snapshot) {
     final Iterable<Card> tiles = snapshot.data.map((Product prod) {
       return Card(
@@ -30,7 +36,6 @@ class _SearchPageState extends State<SearchPage> {
     ).toList();
     return ListView(
         children: divided,
-        shrinkWrap: true,
         padding: const EdgeInsets.all(8.0));
   }
 
@@ -44,8 +49,12 @@ class _SearchPageState extends State<SearchPage> {
       ),
       body: Column(
         children: <Widget>[
-          TextField(
-            onChanged: (String value) => searchProducts(value),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 25),
+            child: TextField(
+              autofocus: true,
+              onChanged: (String value) => searchProducts(value),
+            ),
           ),
           Padding(padding: EdgeInsets.only(top: 8)),
           Expanded(
@@ -73,7 +82,7 @@ class _SearchPageState extends State<SearchPage> {
                   children = Column(children: <Widget>[
                     Icon(
                       Icons.info_outline,
-                      color: Colors.green,
+                      color: Color(0xFF228B22),
                       size: 60,
                     ),
                     Padding(
@@ -98,7 +107,7 @@ class _SearchPageState extends State<SearchPage> {
                   child: children,
                 );
               },
-            ),
+            )
           ),
           Padding(
               padding: EdgeInsets.only(

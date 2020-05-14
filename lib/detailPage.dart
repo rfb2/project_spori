@@ -42,7 +42,7 @@ class DetailPage extends StatelessWidget {
                       children: <Widget>[
                         Center(
                           child: Text('${product.name}',
-                              style: Constants.defaultTextStyle),
+                              style: Constants.boldTextStyle),
                         ),
                       ],
                     ),
@@ -64,24 +64,14 @@ class DetailPage extends StatelessWidget {
                         Center(
                           child: Text(
                             '${product.grade.toStringAsPrecision(3)}',
-                            style: (() {
-                              if (product.grade < 3.33) {
-                                return TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                    color: Colors.red);
-                              } else if (product.grade < 6.66) {
-                                return TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                    color: Colors.yellow);
-                              } else {
-                                return TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                    color: Colors.green);
-                              }
-                            }()),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                color: Color.fromARGB(
+                                    200,
+                                    255 - (25.5 * product.grade).round(),
+                                    (25.5 * product.grade).round(),
+                                    0)),
                           ),
                         ),
                       ],
@@ -103,7 +93,7 @@ class DetailPage extends StatelessWidget {
                       children: <Widget>[
                         Center(
                           child: Text('${product.origin}',
-                              style: Constants.defaultTextStyle),
+                              style: Constants.boldTextStyle),
                         ),
                       ],
                     ),
@@ -124,7 +114,7 @@ class DetailPage extends StatelessWidget {
                       children: <Widget>[
                         Center(
                           child: Text('${product.packaging}',
-                              style: Constants.defaultTextStyle),
+                              style: Constants.boldTextStyle),
                         ),
                       ],
                     ),
@@ -146,7 +136,7 @@ class DetailPage extends StatelessWidget {
                         Center(
                           child: Text(
                               '${Constants.info[product.packagingBreakdownTime]}',
-                              style: Constants.defaultTextStyle),
+                              style: Constants.boldTextStyle),
                         ),
                       ],
                     ),
@@ -168,7 +158,7 @@ class DetailPage extends StatelessWidget {
                         Center(
                           child: Text(
                               '${Constants.info[product.packagingReusability]}',
-                              style: Constants.defaultTextStyle),
+                              style: Constants.boldTextStyle),
                         ),
                       ],
                     ),

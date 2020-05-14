@@ -2,8 +2,6 @@ import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:barcode_scan/barcode_scan.dart';
-import 'package:projectspori/historyPage.dart';
-import 'detailPage.dart';
 import 'fetchData.dart';
 import 'dataClasses.dart';
 import 'constants.dart' as Constants;
@@ -17,7 +15,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Project Spori',
       theme: ThemeData(
-        primarySwatch: Colors.lightGreen,
+        primaryColor: Color(0xFF228B22),
+        accentColor: Color(0xFF2E8B57),
       ),
       home: MyHomePage(),
     );
@@ -61,43 +60,36 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget _buildForm(AsyncSnapshot<Product> snapshot) {
     _history.add(snapshot.data);
     return Card(
-      child: Column(
-        children: <Widget>[
-          Center(
-            child: Text(
-              '${snapshot.data.name}',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-            ),
-          ),
-          Center(
+      child: Padding(
+        padding: EdgeInsets.all(20.0),
+        child: Column(
+          children: <Widget>[
+            Center(
               child: Text(
-            '${snapshot.data.grade.toStringAsPrecision(3)}',
-            style: (() {
-              if (snapshot.data.grade < 3.33) {
-                return TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: Colors.red);
-              } else if (snapshot.data.grade < 6.66) {
-                return TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: Colors.yellow);
-              } else {
-                return TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: Colors.green);
-              }
-            }()),
-          )),
-          Center(
-            child: OutlineButton(
-              child: Text('More Details'),
-              onPressed: () => Constants.pushDetail(context, snapshot.data),
+                '${snapshot.data.name}',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+              ),
             ),
-          ),
-        ],
+            Center(
+                child: Text(
+              '${snapshot.data.grade.toStringAsPrecision(3)}',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Color.fromARGB(
+                      200,
+                      255 - (25.5 * snapshot.data.grade).round(),
+                      (25.5 * snapshot.data.grade).round(),
+                      0)),
+            )),
+            Center(
+              child: OutlineButton(
+                child: Text('More Details'),
+                onPressed: () => Constants.pushDetail(context, snapshot.data),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -148,7 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         gradient: LinearGradient(
                           colors: <Color>[
                             Color(0xFF005105),
-                            Color(0xFF009B0A),
+                            Color(0xFF228B22),
                           ],
                         ),
                       ),
@@ -203,7 +195,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           children = <Widget>[
                             Icon(
                               Icons.info_outline,
-                              color: Colors.green,
+                              color: Color(0xFF228B22),
                               size: 60,
                             ),
                             Padding(
