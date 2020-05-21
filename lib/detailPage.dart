@@ -62,17 +62,7 @@ class DetailPage extends StatelessWidget {
                     Column(
                       children: <Widget>[
                         Center(
-                          child: Text(
-                            '${product.grade.toStringAsPrecision(3)}',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                                color: Color.fromARGB(
-                                    200,
-                                    255 - (25.5 * product.grade).round(),
-                                    (25.5 * product.grade).round(),
-                                    0)),
-                          ),
+                          child: Constants.gradeText(product.grade)
                         ),
                       ],
                     ),

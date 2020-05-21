@@ -6,8 +6,8 @@ class Product {
   final num score;
   final String packaging;
   final num packagingFootprint;
-  final num packagingBreakdownTime;
-  final num packagingReusability;
+  final int packagingBreakdownTime;
+  final int packagingReusability;
   final double grade;
 
   Product({
@@ -36,5 +36,20 @@ class Product {
       packagingReusability: json['packaging_reusability'],
       grade: json['grade'],
     );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'code': code,
+      'origin': origin,
+      'originDistance': originDistance,
+      'score': score,
+      'packaging': packaging,
+      'packagingFootprint': packagingFootprint,
+      'packagingBreakdownTime': packagingBreakdownTime,
+      'packagingReusability': packagingReusability,
+      'grade': grade,
+    };
   }
 }

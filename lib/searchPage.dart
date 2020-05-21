@@ -52,6 +52,7 @@ class _SearchPageState extends State<SearchPage> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 25),
             child: TextField(
+              cursorColor: Color(0xFF006400),
               autofocus: true,
               onChanged: (String value) => searchProducts(value),
             ),

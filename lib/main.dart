@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'fetchData.dart';
 import 'dataClasses.dart';
+import 'database.dart';
 import 'constants.dart' as Constants;
 
 void main() => runApp(MyApp());
@@ -37,7 +38,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   CameraController _controller;
-  final Set<Product> _history = Set<Product>();
+  final List<Product> _history = List<Product>();
   String _barcode = '';
   Future<Product> _product;
   Image _image;
@@ -57,8 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
-  Widget _buildForm(AsyncSnapshot<Product> snapshot) {
-    _history.add(snapshot.data);
+  Widget _buildProductCard(AsyncSnapshot<Product> snapshot) {
     return Card(
       child: Padding(
         padding: EdgeInsets.all(20.0),
@@ -67,24 +67,33 @@ class _MyHomePageState extends State<MyHomePage> {
             Center(
               child: Text(
                 '${snapshot.data.name}',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                style: Constants.headerTextStyle,
               ),
             ),
-            Center(
-                child: Text(
-              '${snapshot.data.grade.toStringAsPrecision(3)}',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  color: Color.fromARGB(
-                      200,
-                      255 - (25.5 * snapshot.data.grade).round(),
-                      (25.5 * snapshot.data.grade).round(),
-                      0)),
-            )),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    Center(
+                      child: Text('Einkunn: ',
+                          style: Constants.defaultTextStyle),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: <Widget>[
+                    Center(
+                        child: Constants.gradeText(snapshot.data.grade)
+                    ),
+                  ],
+                ),
+              ],
+            ),
             Center(
               child: OutlineButton(
-                child: Text('More Details'),
+                child: Text('Meiri upplýsingar'),
+                highlightedBorderColor: Constants.primaryColor,
                 onPressed: () => Constants.pushDetail(context, snapshot.data),
               ),
             ),
@@ -114,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           IconButton(
             icon: Icon(Icons.history),
-            onPressed: () => Constants.pushHistory(context, _history),
+            onPressed: () => Constants.pushHistory(context),
           ),
         ],
       ),
@@ -122,36 +131,6 @@ class _MyHomePageState extends State<MyHomePage> {
         padding: EdgeInsets.all(25.0),
         child: Column(
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Center(
-                  child: RaisedButton(
-                    onPressed: getProduct,
-                    textColor: Colors.white,
-                    padding: const EdgeInsets.all(0.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                      side: BorderSide(color: Colors.black45),
-                    ),
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                        gradient: LinearGradient(
-                          colors: <Color>[
-                            Color(0xFF005105),
-                            Color(0xFF228B22),
-                          ],
-                        ),
-                      ),
-                      padding: const EdgeInsets.all(10.0),
-                      child: const Text('Skanna vöru',
-                          style: TextStyle(fontSize: 20)),
-                    ),
-                  ),
-                ),
-              ],
-            ),
             Row(
               children: <Widget>[
                 if (_barcode.length != 0) Center(child: Text('$_barcode')),
@@ -177,8 +156,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         List<Widget> children;
 
                         if (snapshot.hasData) {
-                          children = <Widget>[_buildForm(snapshot)];
+                          children = <Widget>[_buildProductCard(snapshot)];
                         } else if (snapshot.hasError) {
+                          print('ERRORR EERROORR: ${snapshot.error.toString()}');
                           children = <Widget>[
                             Icon(
                               Icons.error_outline,
@@ -229,6 +209,43 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ],
             ),
+            Row(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 100.0),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Center(
+                  child: RaisedButton(
+                    onPressed: getProduct,
+                    textColor: Colors.white,
+                    padding: const EdgeInsets.all(0.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                      side: BorderSide(color: Colors.black45),
+                    ),
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                        gradient: LinearGradient(
+                          colors: <Color>[
+                            Color(0xFF22AB22),
+                            Color(0xFF228B22),
+                          ],
+                        ),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 50),
+                      child: const Text('Skanna strikamerki',
+                          style: TextStyle(fontSize: 20)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
@@ -238,11 +255,15 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> getProduct() async {
     String barcode = await BarcodeScanner.scan();
     Future<Product> prod = fetchProduct(barcode);
-    // Image img = Image.network('https://cdn.aha.is/media/catalog/product/cache/1/image/752x501/4137793dd7223b9146d9dcb53ced065c/i/m/image_6084_1_11_1_181_1_128_1_51_1_2_1_8_1_25_1_10_1_6_2_7_1_8_1_1_1_22_1_7_1_1_2_5_1_14_1_8_1_16_1_16_1_6_1_4_2_2_1_8_1_17_1_4_1_4_1_8_1_5_1_11_1_3_1_6_1_2_1_3_1_4_1_1_2_3_1_1_1_16_2_6_1_3_1_21_1_5_1_8_1_4_1_3_1_2_1_8_3_4_1_921_2_2140_1_831.jpg');
 
     setState(() {
       _barcode = barcode;
       _product = prod;
     });
+
+    // Image img = Image.network('https://cdn.aha.is/media/catalog/product/cache/1/image/752x501/4137793dd7223b9146d9dcb53ced065c/i/m/image_6084_1_11_1_181_1_128_1_51_1_2_1_8_1_25_1_10_1_6_2_7_1_8_1_1_1_22_1_7_1_1_2_5_1_14_1_8_1_16_1_16_1_6_1_4_2_2_1_8_1_17_1_4_1_4_1_8_1_5_1_11_1_3_1_6_1_2_1_3_1_4_1_1_2_3_1_1_1_16_2_6_1_3_1_21_1_5_1_8_1_4_1_3_1_2_1_8_3_4_1_921_2_2140_1_831.jpg');
+    Product product = await prod;
+    _history.add(product);
+    saveProduct(product);
   }
 }
