@@ -1,8 +1,5 @@
 import 'dart:async';
-
-import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-
 import 'dataClasses.dart';
 
 final Future<Database> database = openDatabase(

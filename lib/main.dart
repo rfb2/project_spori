@@ -29,7 +29,7 @@ class MyHomePage extends StatefulWidget {
 
   const MyHomePage({
     Key key,
-    @required this.camera,
+    this.camera,
   }) : super(key: key);
 
   @override
@@ -38,7 +38,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   CameraController _controller;
-  final List<Product> _history = List<Product>();
   String _barcode = '';
   Future<Product> _product;
   Image _image;
@@ -263,7 +262,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
     // Image img = Image.network('https://cdn.aha.is/media/catalog/product/cache/1/image/752x501/4137793dd7223b9146d9dcb53ced065c/i/m/image_6084_1_11_1_181_1_128_1_51_1_2_1_8_1_25_1_10_1_6_2_7_1_8_1_1_1_22_1_7_1_1_2_5_1_14_1_8_1_16_1_16_1_6_1_4_2_2_1_8_1_17_1_4_1_4_1_8_1_5_1_11_1_3_1_6_1_2_1_3_1_4_1_1_2_3_1_1_1_16_2_6_1_3_1_21_1_5_1_8_1_4_1_3_1_2_1_8_3_4_1_921_2_2140_1_831.jpg');
     Product product = await prod;
-    _history.add(product);
     saveProduct(product);
   }
 }
