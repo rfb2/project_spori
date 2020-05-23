@@ -15,10 +15,38 @@ class _HistoryPageState extends State<HistoryPage> {
   Stream<List<Product>> _history;
 
   void deleteHistory() async {
-    await clearSavedProducts();
-    setState(() {
-      _history = retrieveSavedProducts();
-    });
+    Widget cancelButton = FlatButton(
+      child: Text("Nei, til baka!"),
+      onPressed:  () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text("Já, eyða sögu!"),
+      onPressed:  () async {
+        Navigator.of(context).pop();
+        await clearSavedProducts();
+        setState(() {
+          _history = retrieveSavedProducts();
+        });
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text("Eyða sögu?"),
+      content: Text("Ertu viss um að þú viljir eyða allri sögunni? (Óafturkallanlegt)"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
   @override
@@ -71,7 +99,7 @@ class _HistoryPageState extends State<HistoryPage> {
         builder: (BuildContext context, AsyncSnapshot<List<Product>> snapshot) {
           Widget children;
 
-          if (snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasData) {
             children = _buildHistory(snapshot);
           } else if (snapshot.hasError) {
             children = Column(children: <Widget>[
