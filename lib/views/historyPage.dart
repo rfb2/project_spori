@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'constants.dart' as Constants;
-import 'dataClasses.dart';
-import 'database.dart';
+import '../constants.dart' as Constants;
+import '../dataClasses.dart';
+import '../database.dart';
 
 class HistoryPage extends StatefulWidget {
   @override
@@ -17,13 +17,13 @@ class _HistoryPageState extends State<HistoryPage> {
   void deleteHistory() async {
     Widget cancelButton = FlatButton(
       child: Text("Nei, til baka!"),
-      onPressed:  () {
+      onPressed: () {
         Navigator.of(context).pop();
       },
     );
     Widget continueButton = FlatButton(
       child: Text("Já, eyða sögu!"),
-      onPressed:  () async {
+      onPressed: () async {
         Navigator.of(context).pop();
         await clearSavedProducts();
         setState(() {
@@ -34,7 +34,8 @@ class _HistoryPageState extends State<HistoryPage> {
 
     AlertDialog alert = AlertDialog(
       title: Text("Eyða sögu?"),
-      content: Text("Ertu viss um að þú viljir eyða allri sögunni? (Óafturkallanlegt)"),
+      content: Text(
+          "Ertu viss um að þú viljir eyða allri sögunni? (Óafturkallanlegt)"),
       actions: [
         cancelButton,
         continueButton,
@@ -58,12 +59,14 @@ class _HistoryPageState extends State<HistoryPage> {
   }
 
   Widget _buildHistory(AsyncSnapshot<List<Product>> snapshot) {
-    final Iterable<ListTile> tiles = snapshot.data.map((Product prod) {
-      return ListTile(
-        title: Text(
-          prod.name,
+    final Iterable<Card> tiles = snapshot.data.map((Product prod) {
+      return Card(
+        child: ListTile(
+          title: Text(
+            prod.name,
+          ),
+          onTap: () => Constants.pushDetail(context, prod),
         ),
-        onTap: () => Constants.pushDetail(context, prod),
       );
     });
     Widget historyChild;
@@ -77,7 +80,8 @@ class _HistoryPageState extends State<HistoryPage> {
         context: context,
         tiles: tiles,
       ).toList();
-      historyChild = ListView(children: divided);
+      historyChild =
+          ListView(children: divided, padding: const EdgeInsets.symmetric(vertical: 8.0));
     }
     return historyChild;
   }

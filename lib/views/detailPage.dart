@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'constants.dart' as Constants;
+import '../constants.dart' as Constants;
 
-import 'dataClasses.dart';
+import '../dataClasses.dart';
 
 class DetailPage extends StatelessWidget {
   DetailPage({@required this.product});

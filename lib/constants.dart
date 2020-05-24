@@ -3,13 +3,14 @@ library constants;
 import 'package:flutter/material.dart';
 
 import 'dataClasses.dart';
-import 'detailPage.dart';
-import 'historyPage.dart';
-import 'searchPage.dart';
+import 'views/detailPage.dart';
+import 'views/historyPage.dart';
+import 'views/searchPage.dart';
 
 final List<String> info = ['Engar upplýsingar', 'lágt', 'miðlungs', 'hátt'];
 
-final Color primaryColor = Color(0xFF228B22);
+// final Color primaryColor = Color(0xFF228B22);
+final Color primaryColor = Color(0xFF006B38);
 
 final TextStyle defaultTextStyle =
     TextStyle(fontWeight: FontWeight.w400, fontSize: 20);

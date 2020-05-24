@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:projectspori/detailPage.dart';
+import '../constants.dart' as Constants;
 
-import 'fetchData.dart';
-import 'dataClasses.dart';
+import '../fetchData.dart';
+import '../dataClasses.dart';
 
 class SearchPage extends StatefulWidget {
   @override
@@ -26,7 +26,7 @@ class _SearchPageState extends State<SearchPage> {
           title: Text(
             prod.name,
           ),
-          onTap: () => pushDetail(prod),
+          onTap: () => Constants.pushDetail(context, prod),
         ),
       );
     });
@@ -36,7 +36,7 @@ class _SearchPageState extends State<SearchPage> {
     ).toList();
     return ListView(
         children: divided,
-        padding: const EdgeInsets.all(8.0));
+        padding: const EdgeInsets.symmetric(vertical: 8.0));
   }
 
   @override
@@ -45,7 +45,7 @@ class _SearchPageState extends State<SearchPage> {
       resizeToAvoidBottomInset: false,
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
-        title: Text('Search'),
+        title: Text('Leit'),
       ),
       body: Column(
         children: <Widget>[
@@ -122,10 +122,5 @@ class _SearchPageState extends State<SearchPage> {
     setState(() {
       _results = fetchProductsFromName(name);
     });
-  }
-
-  void pushDetail(Product prod) {
-    Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => DetailPage(product: prod)));
   }
 }
