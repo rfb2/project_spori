@@ -1,5 +1,3 @@
-
-
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +6,6 @@ import '../fetchData.dart';
 import '../dataClasses.dart';
 import '../database.dart';
 import '../constants.dart' as Constants;
-
 
 class MyHomePage extends StatefulWidget {
   final CameraDescription camera;
@@ -60,16 +57,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 Column(
                   children: <Widget>[
                     Center(
-                      child: Text('Einkunn: ',
-                          style: Constants.defaultTextStyle),
+                      child:
+                          Text('Einkunn: ', style: Constants.defaultTextStyle),
                     ),
                   ],
                 ),
                 Column(
                   children: <Widget>[
-                    Center(
-                        child: Constants.gradeText(snapshot.data.grade)
-                    ),
+                    Center(child: Constants.gradeText(snapshot.data.grade)),
                   ],
                 ),
               ],
@@ -96,6 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
+      //backgroundColor: Color(0xFFF1F8E9),
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
@@ -137,12 +133,13 @@ class _MyHomePageState extends State<MyHomePage> {
                         if (snapshot.hasData) {
                           children = <Widget>[_buildProductCard(snapshot)];
                         } else if (snapshot.hasError) {
-                          print('ERRORR EERROORR: ${snapshot.error.toString()}');
+                          print(
+                              'ERRORR EERROORR: ${snapshot.error.toString()}');
                           children = <Widget>[
                             Icon(
                               Icons.error_outline,
                               color: Colors.red,
-                              size: 60,
+                              size: 80,
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top: 16),
@@ -155,7 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             Icon(
                               Icons.info_outline,
                               color: Constants.primaryColor,
-                              size: 60,
+                              size: 80,
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top: 16),
@@ -165,9 +162,12 @@ class _MyHomePageState extends State<MyHomePage> {
                         } else {
                           children = <Widget>[
                             SizedBox(
-                              child: CircularProgressIndicator(),
-                              width: 60,
-                              height: 60,
+                              child: CircularProgressIndicator(
+                                valueColor: new AlwaysStoppedAnimation<Color>(
+                                    Constants.primaryColor),
+                              ),
+                              width: 80,
+                              height: 80,
                             ),
                             const Padding(
                               padding: EdgeInsets.only(top: 16),
@@ -211,13 +211,16 @@ class _MyHomePageState extends State<MyHomePage> {
                       decoration: const BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(15.0)),
                         gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
                           colors: <Color>[
-                            Color(0xFF22AB22),
-                            Color(0xFF006B38),
+                            Color(0xFFAED581),
+                            Color(0xFF33691E),
                           ],
                         ),
                       ),
-                      padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 50),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 30, horizontal: 50),
                       child: const Text('Skanna strikamerki',
                           style: TextStyle(fontSize: 20)),
                     ),

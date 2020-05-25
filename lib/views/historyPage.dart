@@ -59,16 +59,15 @@ class _HistoryPageState extends State<HistoryPage> {
   }
 
   Widget _buildHistory(AsyncSnapshot<List<Product>> snapshot) {
-    final Iterable<Card> tiles = snapshot.data.map((Product prod) {
-      return Card(
-        child: ListTile(
-          title: Text(
-            prod.name,
-          ),
-          onTap: () => Constants.pushDetail(context, prod),
+    final Iterable<ListTile> tiles = snapshot.data.map((Product prod) {
+      return ListTile(
+        title: Text(
+          prod.name,
         ),
+        onTap: () => Constants.pushDetail(context, prod),
       );
     });
+
     Widget historyChild;
 
     if (tiles.length == 0) {
@@ -76,12 +75,12 @@ class _HistoryPageState extends State<HistoryPage> {
         child: Text('Engar vörur í sögu'),
       );
     } else {
-      final List<Widget> divided = ListTile.divideTiles(
-        context: context,
-        tiles: tiles,
-      ).toList();
-      historyChild =
-          ListView(children: divided, padding: const EdgeInsets.symmetric(vertical: 8.0));
+      historyChild = ListView.separated(
+          separatorBuilder: (context, i) => Constants.defaultDivider,
+          itemCount: tiles.length,
+          itemBuilder: (context, i) {
+            return tiles.elementAt(i);
+          });
     }
     return historyChild;
   }
@@ -110,7 +109,7 @@ class _HistoryPageState extends State<HistoryPage> {
               Icon(
                 Icons.error_outline,
                 color: Colors.red,
-                size: 60,
+                size: 80,
               ),
               Padding(
                 padding: EdgeInsets.only(top: 16),
@@ -120,9 +119,12 @@ class _HistoryPageState extends State<HistoryPage> {
           } else {
             children = Column(children: <Widget>[
               SizedBox(
-                child: CircularProgressIndicator(),
-                width: 60,
-                height: 60,
+                child: CircularProgressIndicator(
+                  valueColor:
+                      new AlwaysStoppedAnimation<Color>(Constants.primaryColor),
+                ),
+                width: 80,
+                height: 80,
               ),
               const Padding(
                 padding: EdgeInsets.only(top: 16),

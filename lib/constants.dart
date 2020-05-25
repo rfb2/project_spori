@@ -9,8 +9,8 @@ import 'views/searchPage.dart';
 
 final List<String> info = ['Engar upplýsingar', 'lágt', 'miðlungs', 'hátt'];
 
-// final Color primaryColor = Color(0xFF228B22);
-final Color primaryColor = Color(0xFF006B38);
+final Color primaryColor = Color(0xFF33691E);
+final Color secondaryColor = Color(0xFF7CB342);
 
 final TextStyle defaultTextStyle =
     TextStyle(fontWeight: FontWeight.w400, fontSize: 20);
@@ -20,6 +20,25 @@ final TextStyle boldTextStyle =
 
 final TextStyle headerTextStyle =
     TextStyle(fontWeight: FontWeight.bold, fontSize: 26);
+
+final Widget defaultDivider = Divider(
+  color: primaryColor,
+  thickness: 2,
+  indent: 8,
+  endIndent: 8,
+);
+
+final Widget thinDivider = Divider(color: primaryColor);
+
+final ThemeData myTheme = ThemeData(
+  // Define the default brightness and colors.
+  brightness: Brightness.light,
+  primaryColor: primaryColor,
+  accentColor: secondaryColor,
+
+  // Define the default font family.
+  fontFamily: 'Roboto Slab',
+);
 
 Widget gradeText(double grade) {
   Color color;
@@ -66,6 +85,6 @@ void pushDetail(BuildContext context, Product prod) {
 }
 
 void pushHistory(BuildContext context) {
-  Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => HistoryPage()));
+  Navigator.of(context)
+      .push(MaterialPageRoute(builder: (context) => HistoryPage()));
 }

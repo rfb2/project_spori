@@ -20,23 +20,20 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget _buildForm(AsyncSnapshot<Set<Product>> snapshot) {
-    final Iterable<Card> tiles = snapshot.data.map((Product prod) {
-      return Card(
-        child: ListTile(
-          title: Text(
-            prod.name,
-          ),
-          onTap: () => Constants.pushDetail(context, prod),
+    final Iterable<ListTile> tiles = snapshot.data.map((Product prod) {
+      return ListTile(
+        title: Text(
+          prod.name,
         ),
+        onTap: () => Constants.pushDetail(context, prod),
       );
     });
-    final List<Widget> divided = ListTile.divideTiles(
-      context: context,
-      tiles: tiles,
-    ).toList();
-    return ListView(
-        children: divided,
-        padding: const EdgeInsets.symmetric(vertical: 8.0));
+    return ListView.separated(
+        separatorBuilder: (context, i) => Constants.defaultDivider,
+        itemCount: tiles.length,
+        itemBuilder: (context, i) {
+          return tiles.elementAt(i);
+        });
   }
 
   @override
@@ -58,58 +55,61 @@ class _SearchPageState extends State<SearchPage> {
             ),
           ),
           Padding(padding: EdgeInsets.only(top: 8)),
+          Constants.thinDivider,
           Expanded(
-            child: FutureBuilder<Set<Product>>(
-              future: _results,
-              builder:
-                  (BuildContext context, AsyncSnapshot<Set<Product>> snapshot) {
-                Widget children;
+              child: FutureBuilder<Set<Product>>(
+            future: _results,
+            builder:
+                (BuildContext context, AsyncSnapshot<Set<Product>> snapshot) {
+              Widget children;
 
-                if (snapshot.hasData) {
-                  children = _buildForm(snapshot);
-                } else if (snapshot.hasError) {
-                  children = Column(children: <Widget>[
-                    Icon(
-                      Icons.error_outline,
-                      color: Colors.red,
-                      size: 60,
+              if (snapshot.hasData) {
+                children = _buildForm(snapshot);
+              } else if (snapshot.hasError) {
+                children = Column(children: <Widget>[
+                  Icon(
+                    Icons.error_outline,
+                    color: Colors.red,
+                    size: 80,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 16),
+                    child: Text('Engar vörur fundust'),
+                  )
+                ]);
+              } else if (snapshot.connectionState == ConnectionState.none) {
+                children = Column(children: <Widget>[
+                  Icon(
+                    Icons.info_outline,
+                    color: Color(0xFF228B22),
+                    size: 80,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 16),
+                    child: Text('Vinsamlegast sláðu inn vöruheiti.'),
+                  )
+                ]);
+              } else {
+                children = Column(children: <Widget>[
+                  SizedBox(
+                    child: CircularProgressIndicator(
+                      valueColor: new AlwaysStoppedAnimation<Color>(
+                          Constants.primaryColor),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 16),
-                      child: Text('Engar vörur fundust'),
-                    )
-                  ]);
-                } else if (snapshot.connectionState == ConnectionState.none) {
-                  children = Column(children: <Widget>[
-                    Icon(
-                      Icons.info_outline,
-                      color: Color(0xFF228B22),
-                      size: 60,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 16),
-                      child: Text('Vinsamlegast sláðu inn vöruheiti.'),
-                    )
-                  ]);
-                } else {
-                  children = Column(children: <Widget>[
-                    SizedBox(
-                      child: CircularProgressIndicator(),
-                      width: 60,
-                      height: 60,
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 16),
-                      child: Text('Bíðið andartak...'),
-                    )
-                  ]);
-                }
-                return Center(
-                  child: children,
-                );
-              },
-            )
-          ),
+                    width: 80,
+                    height: 80,
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 16),
+                    child: Text('Bíðið andartak...'),
+                  )
+                ]);
+              }
+              return Center(
+                child: children,
+              );
+            },
+          )),
           Padding(
               padding: EdgeInsets.only(
                   bottom: MediaQuery.of(context).viewInsets.bottom)),
