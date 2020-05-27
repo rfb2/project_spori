@@ -1,6 +1,7 @@
 library constants;
 
 import 'package:flutter/material.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
 
 import 'dataClasses.dart';
 import 'views/detailPage.dart';
@@ -87,4 +88,21 @@ void pushDetail(BuildContext context, Product prod) {
 void pushHistory(BuildContext context) {
   Navigator.of(context)
       .push(MaterialPageRoute(builder: (context) => HistoryPage()));
+}
+
+List<charts.Series<DataItem, dynamic>> chartData(Product prod) {
+  final data = [
+    DataItem('Flutningur', prod.originDistance),
+    DataItem('Umbúðir', prod.packagingFootprint),
+  ];
+
+  return [
+    new charts.Series<DataItem, dynamic>(
+      id: 'Sales',
+      domainFn: (DataItem product, _) => product.label,
+      measureFn: (DataItem product, _) => product.data,
+      data: data,
+      labelAccessorFn: (DataItem row, _) => '${row.label}: ${row.data}',
+    )
+  ];
 }

@@ -6,7 +6,7 @@ class Product {
   final num score;
   final String packaging;
   final num packagingFootprint;
-  final int packagingBreakdownTime;
+  final num packagingBreakdownTime;
   final int packagingReusability;
   final double grade;
 
@@ -52,4 +52,11 @@ class Product {
       'grade': grade,
     };
   }
+}
+
+class DataItem {
+  final String label;
+  final num data;
+
+  DataItem(this.label, this.data);
 }

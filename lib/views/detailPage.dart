@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
 import '../constants.dart' as Constants;
 
 import '../dataClasses.dart';
@@ -10,6 +11,7 @@ class DetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List<charts.Series> seriesList = Constants.chartData(product);
     return Scaffold(
       appBar: AppBar(
         title: Text('${product.name}'),
@@ -28,21 +30,32 @@ class DetailPage extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 Row(
+                  children: <Widget>[
+                    Container(
+                      height: 300,
+                      width: MediaQuery.of(context).size.width-50,
+                      child: Center(
+                        child: new charts.PieChart(
+                          seriesList,
+                          animate: true,
+                          defaultRenderer: new charts.ArcRendererConfig(
+                              arcWidth: 60,
+                              arcRendererDecorators: [
+                                new charts.ArcLabelDecorator()
+                              ]),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Column(
                       children: <Widget>[
                         Center(
-                          child: Text('Nafn á vöru: ',
-                              style: Constants.defaultTextStyle),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: <Widget>[
-                        Center(
                           child: Text('${product.name}',
-                              style: Constants.boldTextStyle),
+                              style: Constants.headerTextStyle),
                         ),
                       ],
                     ),
@@ -61,9 +74,7 @@ class DetailPage extends StatelessWidget {
                     ),
                     Column(
                       children: <Widget>[
-                        Center(
-                          child: Constants.gradeText(product.grade)
-                        ),
+                        Center(child: Constants.gradeText(product.grade)),
                       ],
                     ),
                   ],
@@ -125,7 +136,7 @@ class DetailPage extends StatelessWidget {
                       children: <Widget>[
                         Center(
                           child: Text(
-                              '${Constants.info[product.packagingBreakdownTime]}',
+                              '${product.packagingBreakdownTime}',
                               style: Constants.boldTextStyle),
                         ),
                       ],
