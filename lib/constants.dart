@@ -9,8 +9,8 @@ import 'views/searchPage.dart';
 
 final List<String> info = ['Engar upplýsingar', 'lágt', 'miðlungs', 'hátt'];
 
-final Color primaryColor = Color(0xFF33691E);
-final Color secondaryColor = Color(0xFF7CB342);
+final Color primaryColor = Color(0xFF43A047);
+final Color secondaryColor = Color(0xFFA5D6A7);
 
 final TextStyle defaultTextStyle =
     TextStyle(fontWeight: FontWeight.w400, fontSize: 20);

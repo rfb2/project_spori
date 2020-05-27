@@ -41,6 +41,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _buildProductCard(AsyncSnapshot<Product> snapshot) {
     return Card(
+      color: Constants.secondaryColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
       child: Padding(
         padding: EdgeInsets.all(20.0),
         child: Column(
@@ -51,6 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 style: Constants.headerTextStyle,
               ),
             ),
+            Padding(padding: EdgeInsets.symmetric(vertical: 10)),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -69,6 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ],
             ),
+            Padding(padding: EdgeInsets.symmetric(vertical: 10)),
             Center(
               child: OutlineButton(
                 child: Text('Meiri upplýsingar'),
@@ -214,8 +220,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: <Color>[
-                            Color(0xFFAED581),
-                            Color(0xFF33691E),
+                            Color(0xFFA5D6A7),
+                            Color(0xFF43A047),
                           ],
                         ),
                       ),
