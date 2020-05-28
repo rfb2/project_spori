@@ -12,6 +12,7 @@ class DetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<charts.Series> seriesList = Constants.chartData(product);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('${product.name}'),
@@ -25,148 +26,138 @@ class DetailPage extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Padding(
-            padding: EdgeInsets.all(25.0),
-            child: Column(
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Container(
-                      height: 300,
-                      width: MediaQuery.of(context).size.width-50,
-                      child: Center(
-                        child: new charts.PieChart(
-                          seriesList,
-                          animate: true,
-                          defaultRenderer: new charts.ArcRendererConfig(
-                              arcWidth: 60,
-                              arcRendererDecorators: [
-                                new charts.ArcLabelDecorator()
-                              ]),
-                        ),
-                      ),
-                    ),
-                  ],
+          Row(
+            children: <Widget>[
+              Container(
+                height: 200,
+                width: MediaQuery.of(context).size.width,
+                child: new charts.PieChart(
+                  seriesList,
+                  animate: true,
+                  defaultRenderer: new charts.ArcRendererConfig(
+                      arcWidth: 40,
+                      arcRendererDecorators: [
+                        new charts.ArcLabelDecorator()
+                      ]),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Column(
-                      children: <Widget>[
-                        Center(
-                          child: Text('${product.name}',
-                              style: Constants.headerTextStyle),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Column(
-                      children: <Widget>[
-                        Center(
-                          child: Text('Einkunn: ',
-                              style: Constants.defaultTextStyle),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: <Widget>[
-                        Center(child: Constants.gradeText(product.grade)),
-                      ],
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Column(
-                      children: <Widget>[
-                        Center(
-                          child: Text('Upprunaland: ',
-                              style: Constants.defaultTextStyle),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: <Widget>[
-                        Center(
-                          child: Text('${product.origin}',
-                              style: Constants.boldTextStyle),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Column(
-                      children: <Widget>[
-                        Center(
-                          child: Text('Umbúðir: ',
-                              style: Constants.defaultTextStyle),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: <Widget>[
-                        Center(
-                          child: Text('${product.packaging}',
-                              style: Constants.boldTextStyle),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Column(
-                      children: <Widget>[
-                        Center(
-                          child: Text('Niðurbrotstími umbúða: ',
-                              style: Constants.defaultTextStyle),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: <Widget>[
-                        Center(
-                          child: Text(
-                              '${product.packagingBreakdownTime}',
-                              style: Constants.boldTextStyle),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Column(
-                      children: <Widget>[
-                        Center(
-                          child: Text('Endurnýtanleiki umbúða: ',
-                              style: Constants.defaultTextStyle),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: <Widget>[
-                        Center(
-                          child: Text(
-                              '${Constants.info[product.packagingReusability]}',
-                              style: Constants.boldTextStyle),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  Center(
+                    child: Text('${product.name}',
+                        style: Constants.headerTextStyle),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  Center(
+                    child: Text('Einkunn: ',
+                        style: Constants.defaultTextStyle),
+                  ),
+                ],
+              ),
+              Column(
+                children: <Widget>[
+                  Center(child: Constants.gradeText(product.grade)),
+                ],
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  Center(
+                    child: Text('Upprunaland: ',
+                        style: Constants.defaultTextStyle),
+                  ),
+                ],
+              ),
+              Column(
+                children: <Widget>[
+                  Center(
+                    child: Text('${product.origin}',
+                        style: Constants.boldTextStyle),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  Center(
+                    child: Text('Umbúðir: ',
+                        style: Constants.defaultTextStyle),
+                  ),
+                ],
+              ),
+              Column(
+                children: <Widget>[
+                  Center(
+                    child: Text('${product.packaging}',
+                        style: Constants.boldTextStyle),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  Center(
+                    child: Text('Niðurbrotstími umbúða: ',
+                        style: Constants.defaultTextStyle),
+                  ),
+                ],
+              ),
+              Column(
+                children: <Widget>[
+                  Center(
+                    child: Text('${product.packagingBreakdownTime} ár',
+                        style: Constants.boldTextStyle),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  Center(
+                    child: Text('Endurnýtanleiki umbúða: ',
+                        style: Constants.defaultTextStyle),
+                  ),
+                ],
+              ),
+              Column(
+                children: <Widget>[
+                  Center(
+                    child: Text(
+                        '${Constants.info[product.packagingReusability]}',
+                        style: Constants.boldTextStyle),
+                  ),
+                ],
+              ),
+            ],
           ),
         ],
       ),

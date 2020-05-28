@@ -220,8 +220,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: <Color>[
-                            Color(0xFFA5D6A7),
-                            Color(0xFF43A047),
+                            Color(0xFF00E676),
+                            Color(0xFF00C853),
                           ],
                         ),
                       ),

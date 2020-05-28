@@ -10,8 +10,8 @@ import 'views/searchPage.dart';
 
 final List<String> info = ['Engar upplýsingar', 'lágt', 'miðlungs', 'hátt'];
 
-final Color primaryColor = Color(0xFF43A047);
-final Color secondaryColor = Color(0xFFA5D6A7);
+final Color primaryColor = Color(0xFF00C853);
+final Color secondaryColor = Color(0xFF00E676);
 
 final TextStyle defaultTextStyle =
     TextStyle(fontWeight: FontWeight.w400, fontSize: 20);
@@ -38,7 +38,7 @@ final ThemeData myTheme = ThemeData(
   accentColor: secondaryColor,
 
   // Define the default font family.
-  fontFamily: 'Roboto Slab',
+  fontFamily: 'Raleway, Helvetica, Arial',
 );
 
 Widget gradeText(double grade) {
@@ -90,19 +90,22 @@ void pushHistory(BuildContext context) {
       .push(MaterialPageRoute(builder: (context) => HistoryPage()));
 }
 
+const double AVG_CO2_FLIGHT = 0.11;
+
 List<charts.Series<DataItem, dynamic>> chartData(Product prod) {
   final data = [
-    DataItem('Flutningur', prod.originDistance),
-    DataItem('Umbúðir', prod.packagingFootprint),
+    DataItem('Flutningur', prod.originDistance * AVG_CO2_FLIGHT, charts.Color.fromHex(code: '#43A047')),
+    DataItem('Umbúðir', prod.packagingFootprint * prod.packagingWeight, charts.Color.fromHex(code: '#81C784')),
   ];
 
   return [
-    new charts.Series<DataItem, dynamic>(
+    new charts.Series(
       id: 'Sales',
       domainFn: (DataItem product, _) => product.label,
       measureFn: (DataItem product, _) => product.data,
+      colorFn: (DataItem product, _) => product.color,
       data: data,
-      labelAccessorFn: (DataItem row, _) => '${row.label}: ${row.data}',
+      labelAccessorFn: (DataItem row, _) => '${row.label}: ${row.data.toStringAsPrecision(3)} kg CO2',
     )
   ];
 }
