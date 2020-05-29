@@ -139,8 +139,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         if (snapshot.hasData) {
                           children = <Widget>[_buildProductCard(snapshot)];
                         } else if (snapshot.hasError) {
-                          print(
-                              'ERRORR EERROORR: ${snapshot.error.toString()}');
                           children = <Widget>[
                             Icon(
                               Icons.error_outline,

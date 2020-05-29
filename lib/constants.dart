@@ -41,7 +41,7 @@ final ThemeData myTheme = ThemeData(
   fontFamily: 'Raleway, Helvetica, Arial',
 );
 
-Widget gradeText(double grade) {
+Widget gradeText(num grade) {
   Color color;
   if (grade < 5.0) {
     color = Color.fromARGB(255, 255, (255 / 5 * grade).round(), 0);

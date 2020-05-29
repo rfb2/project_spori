@@ -6,7 +6,7 @@ final Future<Database> database = openDatabase(
   'product_database.db',
   onCreate: (db, version) {
     return db.execute(
-      "CREATE TABLE products (name VARCHAR(128), code VARCHAR(13) NOT NULL PRIMARY KEY, origin VARCHAR(128), originDistance REAL, score REAL NOT NULL, packaging VARCHAR(128), packagingFootprint INTEGER, packagingBreakdownTime INTEGER, packagingReusability INTEGER, grade REAL);"
+      "CREATE TABLE products (id SERIAL PRIMARY KEY, name VARCHAR(128), code VARCHAR(13) NOT NULL, origin VARCHAR(128), originDistance REAL, score REAL NOT NULL, packaging VARCHAR(128), packagingFootprint REAL, packagingBreakdownTime REAL, packagingReusability INTEGER, packagingWeight REAL, grade REAL);"
     );
   },
   version: 1,
@@ -31,6 +31,7 @@ Stream<List<Product>> retrieveSavedProducts() async* {
       packagingFootprint: maps[i]['packagingFootprint'],
       packagingBreakdownTime: maps[i]['packagingBreakdownTime'],
       packagingReusability: maps[i]['packagingReusability'],
+      packagingWeight: maps[i]['packagingWeight'],
       grade: maps[i]['grade'],
     );
   });

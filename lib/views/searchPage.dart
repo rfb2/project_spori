@@ -66,7 +66,6 @@ class _SearchPageState extends State<SearchPage> {
               if (snapshot.hasData) {
                 children = _buildForm(snapshot);
               } else if (snapshot.hasError) {
-                print(snapshot.error);
                 children = Column(children: <Widget>[
                   Icon(
                     Icons.error_outline,
